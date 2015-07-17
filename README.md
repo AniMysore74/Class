@@ -1,15 +1,14 @@
 # Computer Class 
-####Practical File Programs
 
 This is a repository containing all the C++ programs required for the IT files for classes 11 and 12. Modify and use this code as you please for your own practical file. Do not copy directly.
 
 Fork this repository, and create a pull request if you wish to contribute.
 
-######Maintained by [Aniruddha Mysore](http://animysore74.github.io), with [Ayush Patel](http://liveingeniously.com)
+####Maintained by [Aniruddha Mysore](http://animysore74.github.io), with [Ayush Patel](http://liveingeniously.com)
 
 #Program list: 
 
-###Class 11
+##Class 11
 
 | No. | Program Description                                                                                                                   |
 |-----|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -126,7 +125,7 @@ Fork this repository, and create a pull request if you wish to contribute.
 
 ---
 
-###Class 12
+##Class 12
 
 | No. | Program Description                                                                                                                                                                                                          |
 |-----|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
