@@ -4,13 +4,13 @@
 <!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
   <head>
-  {% include head.html %}
+  {% include header.html %}
   </head>
 
   <body>
     <section class="page-header">
       <h1 class="project-name">{% if page.title %}{{ page.title }} &#8211; {% endif %}{{ site.title }}</h1>
-      <h2 class="project-tagline">{{page.description}}</h2>
+      <h2 class="project-tagline">{{site.description}}</h2>
       <a href="https://github.com/AniMysore74/computer-class" class="btn">View on GitHub</a>
       <a href="https://github.com/AniMysore74/computer-class/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/AniMysore74/computer-class/tarball/master" class="btn">Download .tar.gz</a>
@@ -18,10 +18,7 @@
 
     <section class="main-content">
       {{ content }}
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/AniMysore74/computer-class">{{ site.title }}</a> is maintained by <a href="{{ site.owner.github }}">{{ site.owner.name }}</a>.</span>
-        <span class="site-footer-credits">The theme is a customized Jekyll version of the<a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+      {% include footer.html %}
   </section>
   </body>
 </html>

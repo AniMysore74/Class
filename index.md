@@ -1,10 +1,5 @@
 1 --- 
-2 layout: post-index 
-3 title: Latest Posts 
-4 description: "What's up lately" 
-5 tags: [Jekyll, theme, themes, responsive, blog, modern] 
-6 image: 
-7   feature: abstract-8.jpg 
+2 layout: page
 8 --- 
 
 # Computer Class 
