@@ -2,6 +2,7 @@ title:            C++ Program Archive
 description:      Practical-file programs for classes 11 and 12
 #Your site's domain goes here. Leave localhost server or blank when working locally.
 url:              http://thenewcon.com
+baseurl:          /computer-class
 # Owner/author information
 owner:
   name:           Aniruddha Mysore 
