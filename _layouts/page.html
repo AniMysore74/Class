@@ -1,0 +1,20 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+  {% include header.html %}
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">{% if page.title %}{{ page.title }} &#8211; {% endif %}{{ site.title }}</h1>
+      <h2 class="project-tagline">{{site.description}}</h2>
+      <a href="https://github.com/AniMysore74/computer-class" class="btn">View on GitHub</a>
+      <a href="https://github.com/AniMysore74/computer-class/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/AniMysore74/computer-class/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      {{ content }}
+      {% include footer.html %}
+    </section>
+  </body>
+</html>

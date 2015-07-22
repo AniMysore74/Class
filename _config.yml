@@ -1,2 +1,25 @@
-port:  5000
-encoding: utf-8
+title:            C++ Program Archive
+description:      Practical-file programs for classes 11 and 12
+port: 5000
+#Your site's domain goes here. Leave localhost server or blank when working locally.
+url: http://thenewcon.com/computer-class
+# Owner/author information
+owner:
+  name:           Aniruddha Mysore 
+  email:          aniruddha.mysore@gmail.com
+  # Social networking links used in footer. Update and remove as you like.        
+  facebook:       aniruddha.mysore
+  github:         AniMysore74       
+  # For Google Authorship https://plus.google.com/authorship
+  # google plus id, include the '+', eg +
+  google_plus:    +AniruddhaMysore
+
+# Analytics and webmaster tools stuff goes here
+google_analytics: 
+google_verify:     
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:         
+
+include: [".htaccess"]
+exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
+
