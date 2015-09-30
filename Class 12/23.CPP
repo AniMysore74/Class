@@ -1,6 +1,3 @@
-//Write a C++ program to read a 2-D array using pointers
-// (i.e. Dynamic Array), calculate its row sum and column sum and
-//  display this array along with row sum  and column sum.
 #include<iostream.h>
 #include<conio.h>
 

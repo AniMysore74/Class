@@ -3,7 +3,7 @@
 #include<conio.h>
 #include<process.h>
 
-//PORTOTYPES
+//PROTOTYPES
 int Insert_in_CQ(int CQ[], int ele);
 void Display(int CQ[], int front, int rear);
 int Delete_in_CQ(int CQ[]);

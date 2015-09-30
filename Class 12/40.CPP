@@ -3,7 +3,7 @@
 #include<conio.h>
 #include<process.h>
 
-//PRTOTYPES
+//PROTOTYPES
 int Insert(int Queue[], int element);
 int Remove(int Queue[]);
 void Display(int Queue[], int front, int rear);
