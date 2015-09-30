@@ -12,12 +12,13 @@
 #include<stdlib.h>
 #include<string.h>
 #include<dos.h>
+#include<fstream.h>
 
 ///////////////////////////////////////////////////
 //		   CLASSES                 	 //
 ///////////////////////////////////////////////////
 /*-----------------------------------------------------------------*/
-           //Base Class
+	   //Base Class
 /*-----------------------------------------------------------------*/
 class Account
 {
@@ -26,21 +27,21 @@ class Account
 		void PasswordCreation();
 		void AssignID();
 	protected:
-		char *Username, *Password, *FName,*LName,;
+		char *Username, *Password, *FName,*LName;
 		double ID;
 	public:
-    int Validate(int *, int *);
+		int Validate(char *, char *);
 		void EditProfile();
 		void ViewProfile();
 		// Accessor Functions
 		char* getFName()
-		      return FName;
+		{      return FName;}
     char* getLName()
-          return LName;
+   {	  return LName;}
 
 };
 /*-----------------------------------------------------------------*/
-           //Derived Class
+	   //Derived Class
 /*-----------------------------------------------------------------*/
 class Admin : public Account
 {
@@ -56,8 +57,8 @@ class Applicant : public Account
 		void Menu();
 		void EditProfile();
 		void ViewProfile();
-		char **GetIndustries()
-		     return Industries;
+		char **getIndustries()
+		{     return Industries;}
 };
 class Employer : public Account
 {
@@ -67,9 +68,9 @@ class Employer : public Account
 		void Menu();
 		void EditProfile();
 		void ViewProfile();
-		char *GetCompany()
-		     return Company;
-		
+		char *getCompany()
+		{     return Company;}
+
 };
 ///////////////////////////////////////////////////
 //       FUNCTION PROTOTYPES                  //
@@ -78,7 +79,7 @@ class Employer : public Account
 void init();
 //Portals
 int WelcomeScreen();
-int AdminPortal();  
+int AdminPortal();
 int EmployerPortal();
 int ApplicantPortal();
 
@@ -100,7 +101,7 @@ void DrawBorder(int,int,int,int,int);
 //       GLOBAL VARIABLES AND DATA               //
 ///////////////////////////////////////////////////
 
-int AdminSize(1), ApplicantSize(10), EmployerSize(5);
+int AdminSize=1, ApplicantSize=10, EmployerSize=5;
 
 Admin ADM[1];
 Applicant APL[10];
@@ -130,7 +131,7 @@ int main ()
 //////////////////////////////////////////////////////
 //      METHODS OF CLASS 'ACCOUNT'        //
 //////////////////////////////////////////////////////
-void ViewProfile {
+void Account::ViewProfile() {
   clrscr();
   gotoxy(29,5);
   textcolor(12);
@@ -140,43 +141,43 @@ void ViewProfile {
   cout<<"\n\t\t\tID :"<<ID;
   cout<<"\n\t\t\tUsername :"<<Username;
 }
-void EditProfile()
+void Account::EditProfile()
 {
-            //cprintf("What would you like to edit? ");
-            //textcolor(7);
-            //cout<<"\n\n\t\t\t\t[1] Name\n\t\t\t\t[2] Company\n\t\t\t\t[3] Username";
-            
-            //UsernameCreation();
-            //PasswordCreation();
-            //AssignID();
-            //cout<<"\nYour new user ID is : "<<ID;           
-            //cout<<"\nYour account has been created. Now creating your profile...";
-            
-            DrawBorder(25,8,59,16,0);
-            clrscr();
-            gotoxy(24,11);
-            cout<<"Please enter your first name : ";
-            cin>>Fname;
-            cin.ignore();
-            gotoxy(24,12);
-            cout<<"Please enter your last name : ";
-            cin>>LName;
-            cin.ignore();
-            
-            DrawBorder(25,8,59,16,0);
-            clrscr();
-            gotoxy(24,12);
-            cout<<"Username : ";
-            cin>>Username;
-            cin.ignore();
+	    //cprintf("What would you like to edit? ");
+	    //textcolor(7);
+	    //cout<<"\n\n\t\t\t\t[1] Name\n\t\t\t\t[2] Company\n\t\t\t\t[3] Username";
+
+	    //UsernameCreation();
+	    //PasswordCreation();
+	    //AssignID();
+	    //cout<<"\nYour new user ID is : "<<ID;
+	    //cout<<"\nYour account has been created. Now creating your profile...";
+
+	    DrawBorder(25,8,59,16,0);
+	    clrscr();
+	    gotoxy(24,11);
+	    cout<<"Please enter your first name : ";
+	    cin>>FName;
+	    cin.ignore();
+	    gotoxy(24,12);
+	    cout<<"Please enter your last name : ";
+	    cin>>LName;
+	    cin.ignore();
+
+	    DrawBorder(25,8,59,16,0);
+	    clrscr();
+	    gotoxy(24,12);
+	    cout<<"Username : ";
+	    cin>>Username;
+	    cin.ignore();
 
 }
-void Validate(int *U, int *P)
+int Account::Validate(char *U, char *P)
 {
-             if(!strmp(U,Username) && !strcmp(P,Password))
-                 return 1;
-             else 
-                 return 0;
+	     if(!strcmp(U,Username) && !strcmp(P,Password))
+		 return 1;
+	     else
+		 return 0;
 }
 /*
 void Account::UsernameCreation()
@@ -256,7 +257,7 @@ void Admin::Menu()
       SearchEmployers();
      break;
       case '5' :  break;
-      case '6' : SplashScreen(4);
+      case '6' : SplashScreen(4,NULL);
       default  : error(1);
      break;
     }
@@ -294,7 +295,7 @@ void Applicant::Menu()
     ListEmployers();
     break;
       case '4': break;
-      case '5': SplashScreen(4);
+      case '5': SplashScreen(4,NULL);
       default : error(1);
     }
 
@@ -303,11 +304,11 @@ void Applicant::Menu()
 void Applicant::ViewProfile()
 {
   char a;
-  ::ViewProfile();
+  Account::ViewProfile();
   cout<<"\n\t\t\tIndustry :";
   for (int i=0;i<3;i++)
   {
-    cout<<"\n\t\t\t\t-"<<Industry[j];
+    cout<<"\n\t\t\t\t-"<<Industries[i];
   }
   textcolor(12);
   cout<<"\n\n\n\t\t\t1.Edit Profile\n\t\t\t2.Go back\n\n\t\t\tPlease enter your option : ";
@@ -323,16 +324,15 @@ void Applicant::ViewProfile()
 }
 void Applicant::EditProfile() 
 {
-     ::EditProfile();
+    Account::EditProfile();
       DrawBorder(25,8,59,16,0);
     for(int i=0; i<3; i++)
     {
           cout<<"Industry "<<i+1<<" : ";
           gotoxy(27,11+i);        
-          cin>>Industry[i];
+	  cin>>Industries[i];
         cin.ignore();
-      }
-    break;
+    }
      
 }
 //////////////////////////////////////////////////////
@@ -371,7 +371,7 @@ void Employer::Menu()
       SearchApplicants();
      break;
       case '5' : break;
-      case '6' : SplashScreen(4);
+      case '6' : SplashScreen(4,NULL);
       default  : error(1);
      break;
     }
@@ -380,7 +380,7 @@ void Employer::Menu()
 void Employer::ViewProfile()
 {
   char a;
-  ::ViewProfile();
+  Account::ViewProfile();
   cout<<"\n\t\t\tCompany :"<<Company;
   textcolor(12);
   cout<<"\n\n\n\t\t\t1.Edit Profile\n\t\t\t2.Go back\n\n\t\t\tPlease enter your option : ";
@@ -396,7 +396,7 @@ void Employer::ViewProfile()
 }
 void Employer::EditProfile() 
 {
-     ::EditProfile();
+     Account::EditProfile();
       DrawBorder(25,8,59,16,0);
       clrscr();
       gotoxy(24,11);
@@ -411,20 +411,20 @@ void Employer::EditProfile()
 void init()
 {
   fstream file;
-
+  int i;
   file.open("Admin.DAT",ios::binary|ios::out);
   for(i=0; i<AdminSize; i++)
-    file.read((char *) adm[i], sizeof(adm[i]) );
+    file.read((char *) &ADM[i], sizeof(ADM[i]) );
   file.close();
 
   file.open("Applicant.DAT",ios::binary|ios::out);
   for(i=0; i<ApplicantSize; i++)
-    file.read((char *) apt[i], sizeof(apt[i]) );
+    file.read((char *) &APL[i], sizeof(APL[i]) );
   file.close();
-  
+
   file.open("Employer.DAT",ios::binary|ios::out);
   for(i=0; i<EmployerSize; i++)
-    file.read((char *) emp[i], sizeof(emp[i]) );
+    file.read((char *) &EMP[i], sizeof(EMP[i]) );
   file.close();
 }
 /*-----------------------------------------------------------------*/
@@ -527,7 +527,7 @@ int WelcomeScreen()
            EmployerPortal();
 		   break;
 	case '4' : 
-           SplashScreen(4);
+	   SplashScreen(4,NULL);
 		   break;
 	default :  error(0);
 		   break;
@@ -535,7 +535,7 @@ int WelcomeScreen()
   return 0;
 }
 //-----------Splash screens------------//
-void SplashScreen (int ScreenType, char* FName = NULL)
+void SplashScreen (int ScreenType, char *FName)
 {
    switch (ScreenType)
    {
@@ -614,7 +614,8 @@ int AdminPortal()
     case '1': 
           clrscr();
 	      AccNo=Login(1);
-	      ADM[AccNo].Menu();
+	      if(AccNo!=-1)
+              ADM[AccNo].Menu();
 	      break;
     case '2': 
           break;
@@ -644,7 +645,8 @@ int ApplicantPortal()
     case '1': 
           clrscr();
 	      AccNo=Login(2);
-	      APL[AccNo].Menu();
+          if(AccNo!=-1)
+    	      APL[AccNo].Menu();
 	      break;
     case '2': 
           break;
@@ -674,7 +676,8 @@ int EmployerPortal()
     case '1': 
           clrscr();
 	      AccNo=Login(3);
-	      EMP[AccNo].Menu();
+	      if(AccNo!=-1)
+    	      EMP[AccNo].Menu();
 	      break;
     case '2': 
           break;
@@ -742,11 +745,12 @@ int Login (int AccType)
 	    textcolor(12);
         gotoxy(13,5);
         cprintf("Login limit reached. Exiting to Portal.");
+        break;
       }
    } while (login_state==0);
     
   
-  return 0;
+  return -1;
 }
 
 /*-----------------------------------------------------------------*/
@@ -754,7 +758,7 @@ int Login (int AccType)
 /*-----------------------------------------------------------------*/
 void ListApplicants()
 {
-  char *Industries[3];
+  char **Industries;
   int i,j;
   clrscr();
   gotoxy(28,3);
@@ -763,7 +767,7 @@ void ListApplicants()
   textcolor(7);
   for(i=0;i<10;i++)
   {
-     Industries=getIndustries();
+     Industries=APL[i].getIndustries();
      delay(900);
      cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
       textcolor(12);
@@ -774,7 +778,7 @@ void ListApplicants()
       cprintf("Industries : ");
       textcolor(7);
 	  for(j=0; j<3; j++)
-        	  cout<<"\t* "<<Industries[j];
+		  cout<<"\t* "<<*Industries[j];
   }
   cout<<"\n\n\t\t_________________________________________________\n\n";
   textcolor(12);
@@ -788,7 +792,7 @@ void ListApplicants()
 void SearchApplicants()
 {
   int i,j,k,flag=0;
-  char *Term,*Industries[3];
+  char *Term,**Industries;
   clrscr();
   DrawBorder(21,3,63,7,0);
   gotoxy(23,5);
@@ -804,18 +808,18 @@ void SearchApplicants()
     {
        if(!strcmp(Term,Industries[j]))
        {
-    	  delay(900);
-    	  cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
-    	  textcolor(12);
-    	  cprintf("Name : ");
-    	  textcolor(7);
-    	  cout<<APL[i].getFName()<<" "<<APL[i].getLName()<<"\n\t";
-    	  textcolor(12);
-    	  cprintf("Industries : ");
-    	  textcolor(7);
-    	  for(k=0; k<3; k++)
-        	  cout<<"\t* "<<Industries[k];
-    	  flag++;
+	  delay(900);
+	  cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
+	  textcolor(12);
+	  cprintf("Name : ");
+	  textcolor(7);
+	  cout<<APL[i].getFName()<<" "<<APL[i].getLName()<<"\n\t";
+	  textcolor(12);
+	  cprintf("Industries : ");
+	  textcolor(7);
+	  for(k=0; k<3; k++)
+		  cout<<"\t* "<<*Industries[k];
+	  flag++;
        }
     }
   }
