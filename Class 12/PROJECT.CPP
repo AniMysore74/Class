@@ -5,75 +5,101 @@
 //////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-//       HEADER FILES                   //
+//                HEADER FILES                   //
 ///////////////////////////////////////////////////
-#include<iostream.h>
-#include<conio.h>
+#include<fstream.h>
 #include<stdlib.h>
 #include<string.h>
+#include<stdio.h>
+#include<conio.h>
 #include<dos.h>
-#include<fstream.h>
-
 ///////////////////////////////////////////////////
-//		   CLASSES                 	 //
+//		                CLASSES                 	 //
 ///////////////////////////////////////////////////
-/*-----------------------------------------------------------------*/
-	   //Base Class
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*	                 Base Class                  */
+/*-----------------------------------------------*/
 class Account
 {
 	private:
 		void UsernameCreation();
 		void PasswordCreation();
-		void AssignID();
-	protected:
+	
+  protected:
 		char *Username, *Password, *FName,*LName;
 		double ID;
-	public:
+	
+  public:
+    Account(){}
+    Account(char *, char *, char *, char *, double);
 		int Validate(char *, char *);
 		void EditProfile();
 		void ViewProfile();
 		// Accessor Functions
 		char* getFName()
-		{      return FName;}
+		{
+      return FName;
+    }
     char* getLName()
-   {	  return LName;}
-
+    {
+      return LName;
+    }
+    double getID()
+    {
+      return ID;
+    }
 };
-/*-----------------------------------------------------------------*/
-	   //Derived Class
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*	              Derived Class                  */
+/*-----------------------------------------------*/
 class Admin : public Account
 {
-
 	public:
+    Admin():Account(){}
+    Admin(char *U, char *P, char *F, char *L, double ID):Account(U,P,F,L,ID){}
 		void Menu();
 };
 class Applicant : public Account
 {
-   private:
+  private:
 		char *Industries[3];
-	public:
-		void Menu();
+	
+  public:
+    Applicant():Account(){}
+    Applicant(char *U, char *P, char *F, char *L, double ID, char **I):Account(U,P,F,L,ID)
+    {
+    	Industries[0]=I[0];
+    	Industries[1]=I[1];
+    	Industries[2]=I[2];
+    }
+    void Menu();
 		void EditProfile();
 		void ViewProfile();
 		char **getIndustries()
-		{     return Industries;}
+		{
+      return Industries;
+    }
 };
 class Employer : public Account
 {
   private:
 		char *Company;
 	public:
-		void Menu();
+		Employer():Account(){;}
+    Employer::Employer(char *U, char *P, char *F, char *L, double ID, char *C):Account(U,P,F,L,ID)
+    {
+      Company=C;
+    }
+    void Menu();
 		void EditProfile();
 		void ViewProfile();
 		char *getCompany()
-		{     return Company;}
-
+		{     
+      return Company;
+    }
 };
 ///////////////////////////////////////////////////
-//       FUNCTION PROTOTYPES                  //
+//          FUNCTION PROTOTYPES                  //
 ///////////////////////////////////////////////////
 //Initialization
 void init();
@@ -84,32 +110,24 @@ int EmployerPortal();
 int ApplicantPortal();
 
 //User functions
+void AddEmployer();
+void AddApplicant();
 void ListEmployers(); 
 void ListApplicants(); 
 void SearchEmployers(); 
-void SearchApplicants(); 
-
+void SearchApplicants();
+void DeleteEmployer();
+void DeleteApplicant();
 // Login Funcion 
 long Login(int);
 
-// Main Display functions
+// Display functions
 int error(int);
 void SplashScreen(int,char*);
-void DrawBorder(int,int,int,int,int);
-
+void DrawBorder(int,int,int,int,int);  
 ///////////////////////////////////////////////////
-//       GLOBAL VARIABLES AND DATA               //
+//                     MAIN                      //
 ///////////////////////////////////////////////////
-
-int AdminSize=1, ApplicantSize=10, EmployerSize=5;
-
-Admin ADM[1];
-Applicant APL[10];
-Employer EMP[5];
-
-/*-----------------------------------------------------------------*/
-			      // Main
-/*-----------------------------------------------------------------*/
 int main ()
 {
    int i=0;
@@ -124,108 +142,65 @@ int main ()
        clrscr();
        error(-1);
      }
-   } while(i<10);
-   getch();
+   } while(1);
    return 0;
 }
 //////////////////////////////////////////////////////
-//      METHODS OF CLASS 'ACCOUNT'        //
-//////////////////////////////////////////////////////
+//                METHODS OF CLASS 'ACCOUNT'        //
+/////////////////////////////////////////////////////
+Account::Account(char *U, char *P, char *F, char *L, double ID)
+{
+  Username = U;
+  Password = P;
+  FName = F;
+  LName = L;
+  ID = ID;
+}
 void Account::ViewProfile() {
   clrscr();
   gotoxy(29,5);
   textcolor(12);
   cprintf("Profile details : ");
   textcolor(7);
-  cout<<"\n\n\n\t\t\tName : "<<FName<<" "<<LName;
+  cout<<"\n\n\n\t\t\tName : "<<this->FName<<" "<<getLName();
   cout<<"\n\t\t\tID :"<<ID;
-  cout<<"\n\t\t\tUsername :"<<Username;
+  cout<<"\n\t\t\tUsername :"<<*Username;
 }
 void Account::EditProfile()
 {
-	    //cprintf("What would you like to edit? ");
-	    //textcolor(7);
-	    //cout<<"\n\n\t\t\t\t[1] Name\n\t\t\t\t[2] Company\n\t\t\t\t[3] Username";
+  clrscr();
+  DrawBorder(25,8,59,16,0);
+  gotoxy(24,11);
+  cout<<"Please enter your first name : ";
+  cin>>FName;
+  cin.ignore();
+  gotoxy(24,12);
+  cout<<"Please enter your last name : ";
+  cin>>LName;
+  cin.ignore();
 
-	    //UsernameCreation();
-	    //PasswordCreation();
-	    //AssignID();
-	    //cout<<"\nYour new user ID is : "<<ID;
-	    //cout<<"\nYour account has been created. Now creating your profile...";
-
-	    DrawBorder(25,8,59,16,0);
-	    clrscr();
-	    gotoxy(24,11);
-	    cout<<"Please enter your first name : ";
-	    cin>>FName;
-	    cin.ignore();
-	    gotoxy(24,12);
-	    cout<<"Please enter your last name : ";
-	    cin>>LName;
-	    cin.ignore();
-
-	    DrawBorder(25,8,59,16,0);
-	    clrscr();
-	    gotoxy(24,12);
-	    cout<<"Username : ";
-	    cin>>Username;
-	    cin.ignore();
-
+  clrscr();
+  DrawBorder(25,8,59,16,0);
+  gotoxy(24,11);
+  cout<<"ID : ";
+  cin>>ID;
+  gotoxy(24,12);
+  cout<<"Username : ";
+  cin>>Username;
+  gotoxy(24,13);
+  cout<<"Enter new Password : ";
+  cin>>Password;
+  cin.ignore();
 }
 int Account::Validate(char *U, char *P)
 {
-	     if(!strcmp(U,Username) && !strcmp(P,Password))
+	 if(!strcmp(U,Username) && !strcmp(P,Password))
 		 return 1;
-	     else
+	 else
 		 return 0;
 }
-/*
-void Account::UsernameCreation()
-{
-  cout<<"\nPlease enter your desired username : ";
-  cin>>
-
-}
-void Account::PasswordCreation()
-{
-  int upperC(0), lowerC(0), flag(0),len;
-  while(1)
-  {
-    cout<<"\nEnter a password (Minimum 8 characters. \nPassword must contain atleast 1 uppercase \nand 1 lowercase character.)";
-    cin>>Password;
-    len=strlen(Password);
-    if(len<8)
-    {
-      cout<<"\nMinimum 8 characters";
-      continue;
-    }
-    for(int i; i<=strlen(Password); i++)
-    {
-      if(isupper(Password[0]))
-        upperC++;
-      else if(islower(Password[0]))
-        lowerC++;
-      if(lowerC&&upperC)
-      {
-        flag=1;
-        break;
-      }
-    }
-    if(!flag)
-    {
-      cout<<"Password must contain atleast 1 uppercase \nand 1 lowercase character.";
-    }
-}
-void Account::EditProfile()
-{
-  cout<<"\nEnter your first name :";
-  gets(this -> FName);
-  cout<<"\nEnter your last name :";
-  gets(this -> LName);
-}
-*/
 //////////////////////////////////////////////////////
-//      METHODS OF CLASS 'ADMIN'        //
+//              METHODS OF CLASS 'ADMIN'            //
 //////////////////////////////////////////////////////
 void Admin::Menu()
 {
@@ -238,28 +213,41 @@ void Admin::Menu()
     textcolor(12);
     cprintf("Please enter your option : ");
     textcolor(7);
-    cout<<"\n\n\t\t[1] View applicants list\n\t\t[2] Applicant search\n\t\t[3] View employers\n\t\t[4] Employer search\n\t\t[5] Logout \n\t\t[6] Exit";
+    cout<<"\n\n\t\t[1] View applicants list\n\t\t[2] Applicant search\n\t\t[3] View employers\n\t\t[4] Employer search\n\t\t[5] Delete Applicant \n\t\t[6] Delete Employer \n\t\t[7] Logout \n\t\t[8] Exit";
     DrawBorder(15,2,59,20,0);
     gotoxy(29,15);
     cin>>choice;
     switch (choice)
     {
-      case '1' : clrscr();
-     ListApplicants();
-     break;
-      case '2' : clrscr();
-         SearchApplicants();
-     break;
-      case '3' : clrscr();
-     ListEmployers();
-     break;
-      case '4' :  clrscr();
-      SearchEmployers();
-     break;
-      case '5' :  break;
-      case '6' : SplashScreen(4,NULL);
-      default  : error(1);
-     break;
+      case '1' : 
+        clrscr();
+        ListApplicants();
+        break;
+      case '2' : 
+        clrscr();
+        SearchApplicants();
+        break;
+      case '3' : 
+        clrscr();
+        ListEmployers();
+        break;
+      case '4' :  
+        clrscr();
+        SearchEmployers();
+        break;
+      case '5' :
+        DeleteApplicant();
+        break;
+      case '6' :
+        DeleteEmployer();
+        break;
+      case '7' :  
+        break;
+      case '8' : 
+        SplashScreen(2,NULL);
+      default  : 
+        error(1);
+        break;
     }
   } while (choice!='5');
 }
@@ -284,21 +272,26 @@ void Applicant::Menu()
     cin.ignore();
     switch (choice)
     {
-      case '1': clrscr();
-    ViewProfile();
-    break;
-      case '2': cout<<"Taking you to profle ........";
-    delay(500);
-    clrscr();
-    ViewProfile();
-      case '3': clrscr();
-    ListEmployers();
-    break;
-      case '4': break;
-      case '5': SplashScreen(4,NULL);
-      default : error(1);
+      case '1': 
+        clrscr();
+        ViewProfile();
+        break;
+      case '2': 
+        cout<<"Taking you to profle ........";
+        delay(500);
+        clrscr();
+        ViewProfile();
+      case '3': 
+        clrscr();
+        ListEmployers();
+        break;
+      case '4': 
+        break;
+      case '5': 
+        SplashScreen(2,NULL);
+      default : 
+        error(1);
     }
-
   } while(choice!='4');
 }
 void Applicant::ViewProfile()
@@ -316,7 +309,8 @@ void Applicant::ViewProfile()
   gotoxy(29,22);
   cin>>a;
   switch (a) {
-    case '1': clrscr();
+    case '1': 
+        clrscr();
         EditProfile();
         break;
     case '2': break;
@@ -325,13 +319,13 @@ void Applicant::ViewProfile()
 void Applicant::EditProfile() 
 {
     Account::EditProfile();
-      DrawBorder(25,8,59,16,0);
+    DrawBorder(25,8,59,16,0);
     for(int i=0; i<3; i++)
     {
-          cout<<"Industry "<<i+1<<" : ";
-          gotoxy(27,11+i);        
-	  cin>>Industries[i];
-        cin.ignore();
+      cout<<"Industry "<<i+1<<" : ";
+      gotoxy(27,11+i);        
+	    cin>>Industries[i];
+      cin.ignore();
     }
 
 }
@@ -356,24 +350,29 @@ void Employer::Menu()
     cin.ignore();
     switch (choice)
     {
-      case '1' : clrscr();
-     ViewProfile();
-     break;
-      case '2' : cout<<"Taking you to profile....";
-     delay(500);
-     clrscr();
-     ViewProfile();
-     break;
+      case '1' : 
+        clrscr();
+        ViewProfile();
+        break;
+      case '2' : 
+        cout<<"Taking you to profile....";
+        delay(500);
+        clrscr();
+        ViewProfile();
+        break;
       case '3' : clrscr();
-     ListApplicants();
-     break;
+        ListApplicants();
+        break;
       case '4' :  clrscr();
-      SearchApplicants();
-     break;
-      case '5' : break;
-      case '6' : SplashScreen(4,NULL);
-      default  : error(1);
-     break;
+        SearchApplicants();
+        break;
+      case '5' : 
+        break;
+      case '6' : 
+        SplashScreen(2,NULL);
+      default  : 
+        error(1);
+       break;
     }
   } while (choice!='5');
 }
@@ -388,102 +387,93 @@ void Employer::ViewProfile()
   gotoxy(29,22);
   cin>>a;
   switch (a) {
-    case '1': clrscr();
-	 EditProfile();
-	 break;
-    case '2': break;
+    case '1': 
+      clrscr();
+      EditProfile();
+      break;
+    case '2': 
+      break;
   }
 }
 void Employer::EditProfile()
 {
-     Account::EditProfile();
-      DrawBorder(25,8,59,16,0);
-      clrscr();
-      gotoxy(24,11);
-      cout<<"Company : ";
-      cin>>Company;
-      cin.ignore();
-     
+  Account::EditProfile();
+  DrawBorder(25,8,59,16,0);
+  clrscr();
+  gotoxy(24,11);
+  cout<<"Company : ";
+  cin>>Company;
+  cin.ignore();    
 }
-/*-----------------------------------------------------------------*/
-       //Initialization Function
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*            Initialization Function            */
+/*-----------------------------------------------*/
 void init()
 {
-  struct applicant_data
-{
-  char *Username,*Password,*FName,*LName;
-  double ID;
-  char *Industry[3];
-};
-struct admin_data
-{
-  char *Username,*Password,*FName,*LName;
-  double ID;
-};
-struct employer_data
-{
-  char *Username,*Password,*FName,*LName;
-  double ID;
-  char *Company;
-};
-
-admin_data adm[1] =
-{
-      {"admin","pass","Aniruddha","Mysore",101}
-};
-//------Applicants' data------//
-
-applicant_data apt[10] =
-{
-      {"applicant1","pass","Mukta","Jain",201,{"IT","software","media"}},
-      {"applicant2","pass","Sanjaya","Kaur",202,{"media","advertising","PR"}},
-      {"applicant3","pass","Vijay","Korrapati",203,{"IT","hardware","manufacturing"}},
-      {"applicant4","pass","Pranav","Sharma",204,{"IT","software","hardware"}},
-      {"applicant5","pass","Roshan","Bannerji",205,{"education","e-learning","consultancy"}},
-      {"applicant6","pass","Sanjeet","Singh",206,{"telecom","testing","IT"}},
-      {"applicant7","pass","Kailash","Mullur",207,{"analytics","accountancy","BPO"}},
-      {"applicant8","pass","Kishori","Avninder",208,{"banking","insurance","analytics"}},
-      {"applicant9","pass","Bhaskara","Nibhanupudi",209,{"testing","software","IT"}},
-      {"applicant10","pass","Dipali","Chaudhary",210,{"production","manufacturing","design"}},
-
-};
-
-//------Employers' data------//
-
-employer_data emp[5] =
-{
-     {"employer1","pass","Larry","Page",301,"Google"},
-     {"employer2","pass","Mark","Zuckerburg",302,"Facebook"},
-     {"employer3","pass","Bill","Gates",303,"Microsoft"},
-     {"employer4","pass","Jeff","Bezos",304,"Amazon"},
-     {"employer5","pass","Jack","Dorsey",305,"Twitter"}
-};
-/*-----------------------------------------------------------------*/
-			      // Main
-/*-----------------------------------------------------------------*/
-  int i;
   fstream file;
-
   file.open("Admin.DAT",ios::binary|ios::app);
-  for(i=0; i<1; i++)
-    file.write((char *)&adm[i], sizeof(adm[i]) );
+  Admin ADM("admin","pass","Aniruddha","Mysore",101);
+  file.write((char *)&ADM, sizeof(ADM) );
   file.close();
 
-  file.open("Applicant.DAT",ios::binary|ios::app);
-  for(i=0; i<10; i++)
-    file.write((char *)&apt[i], sizeof(apt[i]) );
+  file.open("Apl.DAT",ios::binary|ios::app);
+  
+    char **I1 = new char*("IT","software","media"),
+      **I2 = new char*("IT","hardware","manufacturing"),
+      **I3 = new char*("IT","software","hardware"),
+      **I4 = new char*("education","e-learning","consultancy"),
+      **I5 = new char*("telecom","testing","IT"),
+      **I6 = new char*("analytics","accountancy","BPO"),
+      **I7 = new char*("banking","insurance","analytics"),
+      **I8 = new char*("testing","software","IT"),
+      **I9 = new char*("media","advertising","PR"),
+      **I10 = new char*("production","manufacturing","design");
+
+    Applicant 
+      APL1("applicant1","pass","Mukta","Jain",201,I1),
+      APL2("applicant2","pass","Sanjaya","Kaur",202,I2),
+      APL3("applicant3","pass","Vijay","Korrapati",203,I3),
+      APL4("applicant4","pass","Pranav","Sharma",204,I4),
+      APL5("applicant5","pass","Roshan","Bannerji",205,I5),
+      APL6("applicant6","pass","Sanjeet","Singh",206,I6),
+      APL7("applicant7","pass","Kailash","Mullur",207,I7),
+      APL8("applicant8","pass","Kishori","Avninder",208,I8),
+      APL9("applicant9","pass","Bhaskara","Nibhanupudi",209,I9),
+      APL10("applicant10","pass","Dipali","Chaudhary",210,I10);
+    file.write((char *)&APL1, sizeof(APL1) );
+    file.write((char *)&APL2, sizeof(APL2) );
+    file.write((char *)&APL3, sizeof(APL3) );
+    file.write((char *)&APL4, sizeof(APL4) );
+    file.write((char *)&APL5, sizeof(APL5) );
+    file.write((char *)&APL6, sizeof(APL6) );
+    file.write((char *)&APL7, sizeof(APL7) );
+    file.write((char *)&APL8, sizeof(APL8) );
+    file.write((char *)&APL9, sizeof(APL9) );
+    file.write((char *)&APL10, sizeof(APL10) );
+
+    delete I1,I2,I3,I4,I5,I6,I7,I8,I9,I10;
   file.close();
 
-  file.open("Employer.DAT",ios::binary|ios::app);
-  for(i=0; i<5; i++)
-    file.write((char *)&emp[i], sizeof(emp[i]) );
+  file.open("Emp.DAT",ios::binary|ios::app);
+    Employer
+      EMP1("employer1","pass","Larry","Page",301,"Google"),
+      EMP2("employer2","pass","Mark","Zuckerburg",302,"Facebook"),
+      EMP3("employer3","pass","Bill","Gates",303,"Microsoft"),
+      EMP4("employer4","pass","Jeff","Bezos",304,"Amazon"),
+      EMP5("employer5","pass","Jack","Dorsey",305,"Twitter");
+    file.write((char *)&EMP1, sizeof(EMP1) );
+    file.write((char *)&EMP2, sizeof(EMP2) );
+    file.write((char *)&EMP3, sizeof(EMP3) );
+    file.write((char *)&EMP4, sizeof(EMP4) );
+    file.write((char *)&EMP5, sizeof(EMP5) );
   file.close();
-
 }
-/*-----------------------------------------------------------------*/
-			 //Welcome Screen
-/*-----------------------------------------------------------------*/
+///////////////////////////////////////////////////
+//                 DISPLAY FUNCTIONS             //
+///////////////////////////////////////////////////
+/*-----------------------------------------------*/
+/*              Welcome Screen                   */
+/*-----------------------------------------------*/
 int WelcomeScreen()
 {
   int i,j;
@@ -570,55 +560,57 @@ int WelcomeScreen()
   cin>>choice;
   cin.ignore();
   switch (choice)
-     {
-	case '1' : 
-           AdminPortal();
-		   break;
-	case '2' : 
-           ApplicantPortal();
-		   break;
-	case '3' : 
-           EmployerPortal();
-		   break;
-	case '4' : 
-	   SplashScreen(4,NULL);
-		   break;
-	default :  error(0);
-		   break;
-     }
+  {
+  	case '1' : 
+      AdminPortal();
+      break;
+  	case '2' : 
+      ApplicantPortal();
+      break;
+  	case '3' : 
+      EmployerPortal();
+      break;
+  	case '4' : 
+      SplashScreen(2,NULL);
+      break;
+  	default :  
+      error(1);
+      break;
+  }
   return 0;
 }
 //-----------Splash screens------------//
 void SplashScreen (int ScreenType, char *FName)
 {
-   switch (ScreenType)
-   {
-     case 1 : 
-        DrawBorder(26,3,53,7,1);
-	      gotoxy(31,5);
-	      textcolor(12);
-	      cprintf("Welcome ");
-	      textcolor(7);
-	      cout<<FName;
-	      break;
-     case 2 : 
-        clrscr();
-    		DrawBorder(16,7,63,16,1);
-    		gotoxy(19,10);
-    		textcolor(12);
-    		cprintf("Thank you for using Intellisoft Job Portal");
-    		gotoxy(24,12);
-    		textcolor(7);
-    		cprintf("Developed by Aniruddha Mysore");
-    		gotoxy(26,13);
-    		cprintf("Class 11-B | Roll No. 28");
-    		delay(2000);
-    		exit(0);
-   }
+  switch (ScreenType)
+  {
+    case 1 : 
+      clrscr();
+      DrawBorder(26,3,53,7,1);
+      gotoxy(31,5);
+      textcolor(12);
+      cprintf("Welcome ");
+      textcolor(7);
+      cout<<FName;
+      break;
+    case 2 : 
+      clrscr();
+  		DrawBorder(16,7,63,16,1);
+  		gotoxy(19,10);
+    	textcolor(12);
+    	cprintf("Thank you for using Intellisoft Job Portal");
+    	gotoxy(24,12);
+    	textcolor(7);
+    	cprintf("Developed by Aniruddha Mysore");
+    	gotoxy(26,13);
+    	cprintf("Class 12-B | Roll No. 23");
+    	getch();
+    	exit(0);
+  }
 }
-/*-----------------------------------------------------------------*/
-		       //Border Drawer Tool
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*  		       //Border Drawer Tool              */
+/*-----------------------------------------------*/
 /* Uses x-y co-ordinates of top-left(tl_x and tl_y) and bottom-right
    (br_x and br_y) to draw a white border. Border drawing can be
    static (by passing 0 to animate parameter), or be animated
@@ -646,13 +638,15 @@ void DrawBorder(int tl_x, int tl_y, int br_x, int br_y,int animate)
     cprintf(".");
   }
 }
-/*-----------------------------------------------------------------*/
-			 //Menus ( Portals )
-/*-----------------------------------------------------------------*/
+///////////////////////////////////////////////////
+//                  PORTAL MENUS                 //
+///////////////////////////////////////////////////
 //-----------Admin Portal Menu------------//
 int AdminPortal()
-{
-  int AccNo;
+{       
+  Admin A;
+  fstream file("Admin.DAT",ios::in|ios::binary);
+  long Pos;
   char choice;
   clrscr();
   gotoxy(29,10);
@@ -665,174 +659,248 @@ int AdminPortal()
   cin>>choice;
   switch (choice)
   {
-    case '1': 
-          clrscr();
-	      AccNo=Login(1);
-	      if(AccNo!=-1)
-              ADM[AccNo].Menu();
-	      break;
-    case '2': 
-          break;
-    default : 
-          clrscr();
-	      error(1);
-	      break;
+    case '1':
+      clrscr();
+      Pos=Login(1);
+      if(Pos!=-1)
+      {
+        file.seekg(Pos);
+        file.read((char *) &A, sizeof(A));
+        A.Menu();
+        file.seekg(-Pos,ios::cur);
+        file.write((char *) &A, sizeof(A));
+      }
+      break;
+    case '2':
+  	  break;
+    default :
+      clrscr();
+      error(1);
+      break;
   }
+  file.close();
   return 0;
 }
 //-----------Applicant Portal Menu------------//
 int ApplicantPortal()
 {
-  int AccNo;
+  Applicant A;
+  fstream file("Apl.DAT",ios::in|ios::app|ios::binary);
+  long Pos;
   char choice;
   clrscr();
   gotoxy(29,10);
   textcolor(12);
   cprintf("Please enter your option");
   textcolor(7);
-  cout<<"\n\t[1] Proceed to login\n\t[2] Go Back";
+  cout<<"\n\t[1] Proceed to login\n\t[2] Create New Applicant\n\t[3] Go Back";
   DrawBorder(6,8,78,15,0);
   gotoxy(29,13);
   cin>>choice;
   switch (choice)
   {
-    case '1': 
-          clrscr();
-	      AccNo=Login(2);
-          if(AccNo!=-1)
-    	      APL[AccNo].Menu();
-	      break;
-    case '2': 
-          break;
-    default : 
-          clrscr();
-	      error(1);
-	      break;
+    case '1':
+  	  clrscr();
+      Pos=Login(2);
+  	  if(Pos!=-1)
+  	  {
+  	    file.seekg(Pos);
+        file.read((char *) &A, sizeof(A));
+        A.Menu();
+        file.seekg(-Pos,ios::cur);
+    	  file.write((char *) &A, sizeof(A));
+  	  }
+      break;
+    case '2':
+      AddApplicant();
+      break;
+    case '3':
+  	  break;
+    default :
+  	  clrscr();
+      error(1);
+      break;
   }
+  file.close();
   return 0;
 }
 //-----------Employer Portal Menu------------//
 int EmployerPortal()
 {
-  int AccNo;
+  Employer E;
+  fstream file("Apl.DAT",ios::in|ios::binary);
+  long Pos;
   char choice;
   clrscr();
   gotoxy(29,10);
   textcolor(12);
   cprintf("Please enter your option");
   textcolor(7);
-  cout<<"\n\t[1] Proceed to login\n\t[2] Go Back";
+  cout<<"\n\t[1] Proceed to login\n\t[2] Create New Employer \n\t[3] Go Back";
   DrawBorder(6,8,78,15,0);
   gotoxy(29,13);
   cin>>choice;
   switch (choice)
   {
-    case '1': 
-          clrscr();
-	      AccNo=Login(3);
-	      if(AccNo!=-1)
-    	      EMP[AccNo].Menu();
-	      break;
-    case '2': 
-          break;
+    case '1':
+  	  clrscr();
+  		Pos=Login(3);
+  	  if(Pos!=-1)
+      {
+    	  file.seekg(Pos);
+        file.read((char *) &E, sizeof(E));
+        E.Menu();
+        file.seekg(-Pos,ios::cur);
+    	  file.write((char *) &E, sizeof(E));
+      }
+      break;
+    case 2:
+      AddEmployer();
+      break;
+    case '3': 
+      break;
     default : 
-          clrscr();
-	      error(1);
-	      break;
+      clrscr();
+      error(1);
+      break;
+  }
+  file.close();
+  return 0;
+}
+/*-----------------------------------------------*/
+/*                Error Handling                 */
+/*-----------------------------------------------*/
+int error(int EVal)
+{
+  clrscr();
+  gotoxy(10,13);
+  switch (EVal)
+  {
+    case -1 : 
+      cout<<"Session Expired. Please restart the program. ";
+      delay(500);
+      exit(0);
+      break;
+    case 0 : 
+      cout<<"Unknown Error. Please restart the program. ";
+      delay(500);
+      exit(0);
+      break;
+    case 1 : 
+      cout<<"Input error. Please enter an appropriate response";
+      delay(500);
+      break;
   }
   return 0;
 }
-
-/*-----------------------------------------------------------------*/
-			  //Login System
-/*-----------------------------------------------------------------*/
-int Login (int AccType)
+///////////////////////////////////////////////////
+//                  LOGIN SYSTEM                 //
+///////////////////////////////////////////////////
+long Login (int AccType)
 {
-   fstream file;
-   Admin ADM;
-   Applicant APL;
-   Employer EMP;
-   int attempt_count=0,login_state=0,i,j;
-   char *u,*p;
-
-   do
-   {
-      delay(800);
+  fstream file;
+  Admin ADM;
+  Applicant APL;
+  Employer EMP;
+  int attempt_count=0,i,j,k=0;
+  char *u,*p;
+  do
+  {
+    delay(800);
+    clrscr();
+    DrawBorder(23,8,59,14,0);
+    gotoxy(26,10);
+    cout<<"Enter username : ";
+    textcolor(7);
+    gotoxy(45,10);
+    cin>>u;
+    cin.ignore();
+    gotoxy(26,12);
+    textcolor(8);
+    cout<<"Enter password : ";
+    textcolor(7);
+    for(j=0;p[j-1]!='\r'&&j!=18;j++)
+    {
+      p[j]=getch();
+      cout<<"*";
+    }p[j-1]='\0';
+    switch (AccType)
+    {
+      case 1:
+    	  file.open("Admin.DAT",ios::in|ios::binary);
+        while(!file.eof())
+        {
+          file.read((char *) &ADM, sizeof(ADM));
+          if(ADM.Validate(u,p))
+          {
+            file.seekg(-sizeof(ADM),ios::cur);
+            return file.tellp();
+          }
+        }
+        file.close();
+        break;  
+      case 2:
+        file.open("Apl.DAT",ios::in|ios::binary);
+        while(!file.eof())
+        {
+          file.read((char *) &APL, sizeof(APL));
+          if(APL.Validate(u,p))
+      		{
+      	    file.seekg(-sizeof(APL),ios::cur);
+      	    return file.tellp();
+      	  }
+        }
+        file.close();
+        break;
+      case 3:
+    	  file.open("Emp.DAT",ios::in|ios::binary);
+    	  while(!file.eof())
+    	  {
+      	  file.read((char *) &EMP, sizeof(EMP));
+    	    if(EMP.Validate(u,p))
+    			{
+      	    file.seekg(-sizeof(EMP),ios::cur);
+      	    return file.tellp();
+    	    }
+    	  }
+    	  file.close();
+        break;
+    }
+    //-------Counter for number of password attempts-------//
+    attempt_count++;
+    if(attempt_count>3)
+    {
       clrscr();
-      DrawBorder(23,8,59,14,0);
-      gotoxy(26,10);
-      cout<<"Enter username : ";
-      textcolor(7);
-      gotoxy(45,10);
-      cin>>u;
-      cin.ignore();
-      gotoxy(26,12);
-      textcolor(8);
-      cout<<"Enter password : ";
-      textcolor(7);
-      for(j=0;p[j-1]!='\r'&&j!=18;j++)
-      {
-	 p[j]=getch();
-	 cout<<"*";
-
-      }p[j-1]='\0';
-      if (AccType ==1)
-      {
-	 file.open("Admin.DAT",ios::in|ios::binary);
-
-
-	 while(!file.eof)
-	 {
-
-	   if(ADM.Validate(u,p))
-			     return i;
-	 }
-	 file.close();
-      }
-      else if (AccType==2)
-      {
-	  file.open("Admin.DAT",ios::in|ios::binary);
-	  while(!file.eof)
-	  {
-	    if(APL.Validate(u,p))
-			     return i;
-	  }
-	  file.close();
-      }
-      else if (AccType==3)
-      {
-	  file.open("Admin.DAT",ios::in|ios::binary);
-	  while(!file.eof)
-	  {
-	    if(EMP.Validate(u,p))
-			     return i;
-	  }
-	  file.close();
-      }
-      attempt_count++;
-      //-------Too many tries-------//
-      if(attempt_count>3)
-      {
-	    delay(200);
-	    clrscr();
-	    textcolor(12);
-	 gotoxy(13,5);
-	 cprintf("Login limit reached. Exiting to Portal.");
-	 break;
-      }
-   } while (login_state==0);
-
-
+      textcolor(12);
+      gotoxy(13,5);
+      cprintf("Login limit reached. Exiting to Portal.");
+      delay(200);
+      break;
+    }
+  } while (1);
   return -1;
 }
-
-/*-----------------------------------------------------------------*/
-			      //Applicant List
-/*-----------------------------------------------------------------*/
+///////////////////////////////////////////////////
+//            FILE HANDLING FUNCTIONS            //
+///////////////////////////////////////////////////
+/*-----------------------------------------------*/
+/*                Add Applicant                  */
+/*-----------------------------------------------*/
+void AddApplicant()
+{
+  Applicant A;
+  fstream file("Apl.DAT",ios::app|ios::binary);
+  A.EditProfile();
+  file.write((char*)&A,sizeof(A));
+  file.close();
+}
+/*-----------------------------------------------*/
+/*			         Applicant List                  */
+/*-----------------------------------------------*/
 void ListApplicants()
 {
   Applicant A;
-  fstream file("Applicants.DAT",ios::in|ios::binary);
+  fstream file("Apl.DAT",ios::in|ios::binary);
   char **Industries;
   int i;
   clrscr();
@@ -840,21 +908,21 @@ void ListApplicants()
   textcolor(12);
   cprintf("Full list of applicants :");
   textcolor(7);
-  while(!file.eof)
+  while(!file.eof())
   {
-     file.read((char *)&A, sizeof(A));
-     Industries=A.getIndustries();
-     delay(900);
-     cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
-      textcolor(12);
-      cprintf("Name : ");
-      textcolor(7);
-      cout<<A.getFName()<<" "<<A.getLName()<<"\n\t";
-      textcolor(12);
-      cprintf("Industries : ");
-      textcolor(7);
-	  for(i=0; i<3; i++)
-		  cout<<"\t* "<<*Industries[i];
+    file.read((char *)&A, sizeof(A));
+    Industries=A.getIndustries();
+    delay(900);
+    cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
+    textcolor(12);
+    cprintf("Name : ");
+    textcolor(7);
+    cout<<A.getFName()<<" "<<A.getLName()<<"\n\t";
+    textcolor(12);
+    cprintf("Industries : ");
+    textcolor(7);
+    for(i=0; i<3; i++)
+      cout<<"\t* "<<*Industries[i];
   }
   file.close();
   cout<<"\n\n\t\t_________________________________________________\n\n";
@@ -863,13 +931,13 @@ void ListApplicants()
   textcolor(7);
   getch();
 }
-/*-----------------------------------------------------------------*/
-			      //Applicant Search
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*			         Applicant Search                */
+/*-----------------------------------------------*/
 void SearchApplicants()
 {
   Applicant A;
-  fstream file("Applicant.DAT",ios::in|ios::binary);
+  fstream file("Apl.DAT",ios::in|ios::binary);
   int i,j,flag=0;
   char *Term,**Industries;
   clrscr();
@@ -880,63 +948,131 @@ void SearchApplicants()
   textcolor(7);
   cin>>Term;
   cin.ignore();
-  while(!file.eof)
+  while(!file.eof())
   {
     file.read((char *)&A, sizeof(A));
     Industries=A.getIndustries();
     for(i=0;i<3;i++)
     {
-	if(!strcmp(Term,Industries[i]))
-	{
-	  delay(900);
-	  cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
-	  textcolor(12);
-	  cprintf("Name : ");
-	  textcolor(7);
-	  cout<<A.getFName()<<" "<<A.getLName()<<"\n\t";
-	  textcolor(12);
-	  cprintf("Industries : ");
-	  textcolor(7);
-	  for(j=0; j<3; j++)
-		  cout<<"\t* "<<*Industries[j];
-	  flag++;
-	}
+    	if(!strcmp(Term,Industries[i]))
+    	{
+    	  delay(900);
+    	  cout<<"\n\n\t\t_________________________________________________\n\t\t\t";
+    	  textcolor(12);
+    	  cprintf("Name : ");
+    	  textcolor(7);
+    	  cout<<A.getFName()<<" "<<A.getLName()<<"\n\t";
+    	  textcolor(12);
+    	  cprintf("Industries : ");
+    	  textcolor(7);
+    	  for(j=0; j<3; j++)
+    		  cout<<"\t* "<<*Industries[j];
+    	  flag++;
+    	}
     }
   }
   file.close();
   if(!flag)
-    cout<<"\n\n\No Matches";
+    cout<<"\n\n\tNo Matches";
   cout<<"\n\n\t\t_________________________________________________\n\n";
   textcolor(12);
   cprintf("Press any key to go back");
   textcolor(7);
   getch();
 }
-/*-----------------------------------------------------------------*/
-			      //Employer List
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*      	       Delete Applicant                */
+/*-----------------------------------------------*/
+void DeleteApplicant()
+{
+  int flag=0;
+  long Pos;
+  char choice;
+  double ID;
+  Applicant A;
+  fstream file("Apl.DAT",ios::in|ios::app|ios::binary);
+  clrscr();
+  cout<<"Enter the ID \nof the applicant you wish to delete : ";
+  cin>>ID;
+
+  file.seekg(0,ios::beg);
+  while(!file.eof())
+  {
+    cout<<"Searching through Records . . .";
+    file.read((char*)&A,sizeof(A));
+    if(A.getID()==ID)
+    {
+      delay(1000);
+      clrscr();
+      cout<<"\n\n\t\t";
+      textcolor(12);
+      cprintf("Name : ");
+      textcolor(7);
+      cout<<A.getFName()<<" "<<A.getLName()<<"\n\t";
+      cout<<"\n\n\t\t=============================\n\n\t\tDelete?(Y/N)";
+      cin>>choice;
+      if(choice=='y'|choice=='Y')
+      {
+      	file.seekg(-sizeof(A),ios::cur);
+      	Pos=file.tellg();
+      	flag=1;
+      	break;
+      }
+    }
+  }
+  if(flag)
+  {
+    file.seekg(0,ios::beg);
+    fstream temp("Temp.DAT",ios::app|ios::binary);
+    while(!file.eof())
+    {
+      if(Pos==file.tellg())
+	      continue;
+      file.read((char*)&A,sizeof(A));
+      temp.write((char*)&A,sizeof(A));
+    }
+    file.close();
+    temp.close();
+    remove("Apl.DAT");
+    rename("Temp.DAT","Apl.DAT");
+  }
+}
+/*-----------------------------------------------*/
+/*	               Add Employer                  */
+/*-----------------------------------------------*/
+void AddEmployer()
+{
+  Employer E;
+  fstream file("Emp.DAT",ios::app|ios::binary);
+  E.EditProfile();
+  file.write((char*)&E,sizeof(E));
+  file.close();
+}
+/*-----------------------------------------------*/
+/*  			         Employer List                 */
+/*-----------------------------------------------*/
 void ListEmployers()
 {
   Employer E;
-  fstream file("Employer.DAT",ios::in|ios::binary);
+  fstream file("Emp.DAT",ios::in|ios::binary);
   clrscr();
   gotoxy(28,8);
   textcolor(12);
   cprintf("Full list of employers :");
   textcolor(7);
-  while(!file.eof)
+  while(!file.eof())
   {
-     file.read((char *)&E, sizeof(E));
-     delay(900);
-     cout<<"\n\n\t\t_________________________________________________\n\n\t\t\t";
-     textcolor(12);
-     cprintf("Name : ");
-     textcolor(7);
-     cout<<E.getFName()<<" "<<E.getLName()<<"\n\t\t\t\t";
-     textcolor(12);
-     cprintf("Company : ");
-     textcolor(7);
-     cout<<E.getCompany();
+    file.read((char *)&E, sizeof(E));
+    delay(900);
+    cout<<"\n\n\t\t_________________________________________________\n\n\t\t\t";
+    textcolor(12);
+    cprintf("Name : ");
+    textcolor(7);
+    cout<<E.getFName()<<" "<<E.getLName()<<"\n\t\t\t\t";
+    textcolor(12);
+    cprintf("Company : ");
+    textcolor(7);
+    cout<<E.getCompany();
   }
   file.close();
   cout<<"\n\n\t\t_________________________________________________\n\n";
@@ -945,13 +1081,13 @@ void ListEmployers()
   textcolor(7);
   getch();
 }
-/*-----------------------------------------------------------------*/
-			      //Employer Search
-/*-----------------------------------------------------------------*/
+/*-----------------------------------------------*/
+/*			          Employer Search                */
+/*-----------------------------------------------*/
 void SearchEmployers()
 {
   Employer E;
-  fstream file("Employer.DAT",ios::in|ios::binary);
+  fstream file("Emp.DAT",ios::in|ios::binary);
   int flag=0;
   char choice,*Term;
   clrscr();
@@ -962,7 +1098,7 @@ void SearchEmployers()
   textcolor(7);
   cin>>Term;
   cin.ignore();
-  while(!file.eof)
+  while(!file.eof())
   {
     file.read((char *)&E, sizeof(E));
     if(!strcmp(Term,E.getCompany()))
@@ -989,26 +1125,60 @@ void SearchEmployers()
   textcolor(7);
   getch();
 }
-/*-----------------------------------------------------------------*/
-			  //Error Handling
-/*-----------------------------------------------------------------*/
-int error(int EVal)
+/*-----------------------------------------------*/
+/*	             Delete Employer                 */
+/*-----------------------------------------------*/
+void DeleteEmployer()
 {
+  int flag=0;
+  long Pos;
+  char choice;
+  double ID;
+  Employer E;
+  fstream file("Emp.DAT",ios::in|ios::app|ios::binary);
   clrscr();
-  gotoxy(10,13);
-  switch (EVal)
+  cout<<"Enter the ID \nof the employer you wish to delete : ";
+  cin>>ID;
+
+  file.seekg(0,ios::beg);
+  while(!file.eof())
   {
-    case -1 : cout<<"Session Expired. Please restart the program. ";
-	      delay(500);
-	      exit(0);
-	      break;
-    case 0 : cout<<"Unknown Error. Please restart the program. ";
-	     delay(500);
-	     exit(0);
-	     break;
-    case 1 : cout<<"Input error. Please enter an appropriate response";
-	     delay(500);
-	     break;
+    cout<<"Searching through Records . . .";
+    file.read((char*)&E,sizeof(E));
+    if(E.getID()==ID)
+    {
+      delay(1000);
+      clrscr();
+      cout<<"\n\n\t\t";
+      textcolor(12);
+      cprintf("Name : ");
+      textcolor(7);
+      cout<<E.getFName()<<" "<<E.getLName()<<"\n\t";
+      cout<<"\n\n\t\t=============================\n\n\t\tDelete?(Y/N)";
+      cin>>choice;
+      if(choice=='y'|choice=='Y')
+      {
+        file.seekg(-sizeof(E),ios::cur);
+        Pos=file.tellg();
+        flag=1;
+        break;
+      }
+    }
   }
-  return 0;
+  if(flag)
+  {
+    file.seekg(0,ios::beg);
+    fstream temp("Temp.DAT",ios::app|ios::binary);
+    while(!file.eof())
+    {
+      if(Pos==file.tellg())
+    	continue;
+      file.read((char*)&E,sizeof(E));
+      temp.write((char*)&E,sizeof(E));
+    }
+    file.close();
+    temp.close();
+    remove("Emp.DAT");
+    rename("Temp.DAT","Emp.DAT");
+  }
 }
